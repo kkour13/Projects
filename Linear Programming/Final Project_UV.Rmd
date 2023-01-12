@@ -1,0 +1,317 @@
+---
+title: |
+  | \vspace{4cm} \LARGE Mathematical Optimization Model
+  \LARGE Final Project
+subtitle: |
+  Hanish Bhogadi,
+  Kiran Kour,
+  Arbuda Sivani
+author:
+  - MIS 64018 Quantitative Management Modeling
+  - Professor Dambar Uprety
+  - Kent State University
+abstract: |
+ The objective of this assignment is to define, formulate, and solve a mathematical optimization model.
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: pdf_document
+header-includes: 
+  - \renewcommand{\and}{\\}
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+\newpage 
+
+## Brief Introduction on the Project:
+
+# The below description includes the data collection process and the factors that contribute to the success of a project:
+
+The goal of this project is to maximize the success by assigning the students to correct groups. For this, we have chosen integer linear programming to find the optimal solution as it also helps us to maximizing the objective function. 
+
+We have been asked to assign 12 students to a group project:
++ Division: The 12 students has been put into four different groups which means each group has 3 students.
+
+A typical analytics project starts with Data preparation:
++ Data preparation: The data has been randomly selected and the key factors are the following:
+
+***Group Number:*** 
+This column indicates the group numbers of the 12 different students. This particular column has not been taken in the further process as again there has been a random assignment of the groups.
+
+
+***Roll Number:*** 
+Students have their respective roll numbers from 1-12.
+
+
+***GPA:*** 
+The students have been scaled on a GPA of 1-4 where 1 being given to the student with least overall grade and 4 to students with the highest overall grade.
+
+
+***Gender:*** 
+This particular attribute has no contribution in the success of the project as the success is independent of the gender. Since this is a categorical attribute we have considered it a 0's and 1's. There are 6 female students and 6 male students and there is no hard and fast rule that every group should have a certain number of male and female students. This has been a random assignment.
+1 - female
+0 - male
+
+
+***Total number of meeting hours:*** 
+Since it is a group project, it is very important for them meet regularly on a weekly basis. It could be both virtual or in person. Our assumption was the threshold hours of 20 has been given by the instructor to the students. It is the second important factor in our project. 
+Note: A point to be noted is this has been assigned individually. Sometimes, it is not important that all the three students in the group would have attended the meeting. Hence, 9 are the least attended meeting hours and 20 being the highest. 
+
+
+***Clarity on the objectives of the project:***
+Any project will be constructed on certain objectives that they are trying to prove in the project. It is the most important factor and the reason for a success behind the project. Our assumption is that a student will have a clarity on the objectives only when they have a good understanding on the subject. Our assumption behind giving grade to the students was that the instructor has tested each student first on their clarity of the objectives of their group project and continued to question them on the subject as well. He has graded them individually on a scale of 100.
+
+
+
+We defined the Project dataset that will help in futher process:
+
+```{r comment=NA, echo=FALSE}
+Project <- data.frame(Person = c(1:12), 
+                        GPA = c(3.2, 3.7, 3, 3.3, 2.9, 3, 3, 2.9, 3.9, 3.6, 3.2, 3.8), 
+                        Gender = c(1,0,0,0,1,1,1,1,0,0,1,0), 
+                        MeetingHours = c(15, 20, 15, 15, 7, 17, 12, 6, 20, 20, 17, 19), 
+                        ClarityonObjectives = c(75, 90, 60, 70, 25, 80, 60, 35, 95, 65, 74, 89))
+
+Project
+```
+# The most important factor that contributes to the success of a project:
+
+Above we have given a brief description on each factor that we have considered. Not necessarily that every attribute defines the success of the project. Below we have given the explanation on what is the factor that we have considered as the most important attribute that defines the success.
+
+We have taken the "Clarity on objectives" by each student as the important attribute. This is so because of the following reasons:
+
+***Clarity on objectives*** gives us an impression on the subject knowledge a particular student will be having. This is also related to GPA and meeting hours. A student attending more meetings and has a good GPA will surely have a good clarity on the objectives of the project and also as the instructor has tested them on the subject knowledge of the student and has hence given grades. 
+
+***Total no. of meeting hours*** gives how much efforts a student is putting in completing the project. The meetings will be held to give the updates on progress, methodology used etc. If a student will not cater the hours required he/she might loose on the important information and might not be able to contribute his/her part to the project.
+
+***Low GPA*** will effect the overall performance of the subject and might even fail. As the clarity on the objectives & meeting hours are interlinked they should do well on the latter to improve their GPA.
+
+We assumed that ***GPA*** needs to be 5 for group 1, 4 for group 2, 3 for group 3, 2 for group 4. Additionally, the hours worked on the project must we 30 for group 1, 25 for group 2, 20 for group 3, 15 for group 4.
+
+\newpage 
+
+## II. Formulating the problem:
+
+Now that we have seen all the assumptions made for the project above, now quantitatively let us formulate the problem. Below we shall be defining the objective function and subject to Groups, GPA, Gender & Total no of meeting hours
+
+Let:
+
+$x_{ij}$ = 1 if person $j$ belong to group $i$, and 0 if not.  
+
++ $j$ refers to person = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 
+
++ $i$ means group = 1, 2, 3, 4 
+
+
+***Objective function:*** 
+
+\begin{equation*}
+  \begin{split}
+    Max \: Z &= 75\sum_{i=1}^{4}x_{i1} + 90\sum_{i=1}^{4}x_{i2} + 60\sum_{i=1}^{4}x_{i3} +  70\sum_{i=1}^{4}x_{i4} + 25\sum_{i=1}^{4}x_{i5} + 80\sum_{i=1}^{4}x_{i6} \\
+    &+ 60\sum_{i=1}^{4}x_{i7} + 35\sum_{i=1}^{4}x_{i8} + 95\sum_{i=1}^{4}x_{i9} + 65\sum_{i=1}^{4}x_{i10} + 74\sum_{i=1}^{4}x_{i11} +89\sum_{i=1}^{4}x_{i12}
+    \end{split}
+\end{equation*}
+S.T: 
+
+      Groups
+
+$$ \sum_{j=1}^{12}x_{ij} = 3, where \: i = 1, 2, 3, 4 \: and  \: j = 1,2,3,4, 5, ... , 12$$
+
+      GPA
+
+$$ \sum_{j=1}^{12}GPA_{j}x_{ij}  \geq 12 - i, where \: i = 1, 2, 3, 4 \: and  \: j = 1,2,3,4, 5, ... , 12 $$
+
+      Gender
+
+$$ \sum_{j=1}^{12} G_{j}x_{ij} \geq 1 ,  where \: G = gender, \: i = 1, 2, 3, 4 \: and  \: j = 1,2,3,4, 5, ... , 12 $$
+
+      Total no of meeting hours
+
+$$ \sum_{j=1}^{12}H_{j}x_{ij}  \geq 45-5i, where \: H = hours, \: i = 1, 2, 3, 4 \: and  \: j = 1,2,3,4, 5, ... , 12 $$
+
+      Person must be part on one and only one group
+
+$$ \sum_{i=1}^{4}x_{ij}  = 1, where \: i = 1, 2, 3, 4 \: and  \: j = 1,2,3,4, 5, ... , 12 $$
+
+      Integer constrain
+
+$$x_{ij} \: is \: integer, \: for \: i = 1, 2, 3, 4 \: and  \: j = 1,2,3,4, 5, ... , 12.$$
+
+\newpage 
+
+## III. Solve the Problem
+
+Now let us move to the third phase and that is solving the problem:
+
+```{r comment=NA}
+
+Project <- data.frame(Person = c(1:12), 
+                        GPA = c(3.2, 3.7, 3, 3.3, 2.9, 3, 3, 2.9, 3.9, 3.6, 3.2, 3.8), 
+                        Gender = c(1,0,0,0,1,1,1,1,0,0,1,0), 
+                        MeetingHours = c(15, 20, 15, 15, 7, 17, 12, 6, 20, 20, 17, 19), 
+                        ClarityonObjectives = c(75, 90, 60, 70, 25, 80, 60, 35, 95, 65, 74, 89))
+
+Project
+
+```
+
+
+```{r, results='hide', comment=NA}
+
+# Import the lpSolve package
+library(lpSolveAPI)
+
+# Lp_object with 0 constraints and 48 decision variables
+lp_1 <- make.lp(0, 48)
+
+# Integer programming
+set.type(lp_1, 48, "integer")
+
+# Objective function 
+set.objfn(lp_1, rep(c(75,90,60,70,25,80,60,35,95,65,74,89),4))
+
+# Maximizing
+lp.control(lp_1,sense='max')
+
+```
+
+```{r, comment=NA}
+
+# Adding the constraints
+
+add.constraint(lp_1, c(rep(1,12),rep(0,36)), "=", 3)
+add.constraint(lp_1, c(rep(0,12),rep(1,12),rep(0,24)), "=", 3)
+add.constraint(lp_1, c(rep(0,24),rep(1,12),rep(0,12)), "=", 3)
+add.constraint(lp_1, c(rep(0,36),rep(1,12)), "=", 3)
+add.constraint(lp_1, rep(Project$GPA,4), ">=", 5)
+add.constraint(lp_1, rep(Project$GPA,4), ">=", 4)
+add.constraint(lp_1, rep(Project$GPA,4), ">=", 3)
+add.constraint(lp_1, rep(Project$GPA,4), ">=", 2)
+add.constraint(lp_1, rep(Project$Gender,4), ">=", 1)
+add.constraint(lp_1, rep(Project$Gender,4), ">=", 1)
+add.constraint(lp_1, rep(Project$Gender,4), ">=", 1)
+add.constraint(lp_1, rep(Project$Gender,4), ">=", 1)
+add.constraint(lp_1, rep(Project$MeetingHours,4), ">=", 30)
+add.constraint(lp_1, rep(Project$MeetingHours,4), ">=", 25)
+add.constraint(lp_1, rep(Project$MeetingHours,4), ">=", 20)
+add.constraint(lp_1, rep(Project$MeetingHours,4), ">=", 15)
+add.constraint(lp_1, rep(c(1,rep(0,11)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,1),1,rep(0,10)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,2),1,rep(0,9)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,3),1,rep(0,8)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,4),1,rep(0,7)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,5),1,rep(0,6)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,6),1,rep(0,5)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,7),1,rep(0,4)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,8),1,rep(0,3)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,9),1,rep(0,2)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,10),1,rep(0,1)),4), "=", 1)
+add.constraint(lp_1, rep(c(rep(0,11),1),4), "=", 1)
+
+# Solving the model
+solve(lp_1)
+```
+
+The solver is giving us an output of 0 and with this we can confirm that it is finding a solution.
+
+```{r, comment=NA}
+
+# Getting the maximum success changes
+get.objective(lp_1)
+
+```
+
+The above answer 818 is overall grade of the class on understanding and getting a clarity on the objectives
+
+```{r, comment=NA}
+
+# Getting the constraints
+get.constraints(lp_1)
+
+```
+
+```{r, comment=NA}
+
+# We will re shuffle the groups of the students and put them in the optimal groups they should belong by getting the variables
+get.variables(lp_1)
+
+```
+Observations from the above:
+
+*Now when we take a close look at the results obtained after getting the variables it is giving us the optimal groups for the members to be successful in the group project.
+
+*The 12 students should be mixed in a way such that where ever we are getting "1" that denotes that the particular student should belong to group 1 and in the remaining "0"s we can have the other groups.
+
+*So here 2nd, 9th and 12th student should belong to group 1 and the remaining can be there in the other groups.
+
+
+#In the code below, we have given the optimal mix of the groups
+
+```{r, comment=NA, echo=FALSE}
+
+# Reshuffle
+Group <- data.frame(Group = c(2,1,3,4,3,2,4,3,1,2,4,1))
+
+# Taking the two data frames(Project and the new Group)
+Proj_assigned <- cbind(Project, Group = Group$Group)
+
+# Show final result
+Proj_assigned
+
+```
+
+Any results when visualized can be understood in a more better way. Hence, we have created a plot to depict the results
+
+```{r comment=NA, figures-side, fig.show="hold", out.width="50%", echo=FALSE}
+
+#Function to generate a continuous color palette
+mycolor <- colorRampPalette(c('blue','pink'))
+
+#Add the color palette based on customer's balance
+
+mycolor2 <- mycolor(20)[as.numeric(cut(Proj_assigned$Group,breaks = 20))]
+plot(as.factor(Proj_assigned$Group), Proj_assigned$GPA, 
+     main="GPA's by Groups", 
+     xlab="Group", 
+     ylab="GPA", 
+     col = mycolor2,
+     cex.main=1.5,
+     cex.axis = 1.5,
+     pch = 15)
+
+plot(as.factor(Proj_assigned$Group), Proj_assigned$MeetingHours, 
+     main="Meeting Hours by Groups", 
+     xlab="Group", 
+     ylab="Meeting Hours", 
+     col = mycolor2,
+     cex.main=1.5,
+     cex.axis = 1.5,
+     pch = 15)
+
+plot(as.factor(Proj_assigned$Group), Proj_assigned$ClarityonObjectives, 
+     main="ClarityonObjectives", 
+     xlab="Group", 
+     ylab="ClarityonObjectives", 
+     col = mycolor2,
+     cex.main=1.5,
+     cex.axis = 1.5,
+     pch = 15)
+``` 
+
+We have analyzed the following results from the above graphs:
+
+* The group that has the highest number of meeting hours are Group 1 and the least by Group 3.
+
+* The group that has the highest GPA's is also Group 1 and the least GPA's by Group 3.
+
+* When we see it is also clear that Group 1 has the highest clarity on the objectives of their project with Group 3 being the lowest.
+
+Since all the key factors that we have considered shows that Group 1 perform well, we can say that Group 1 is going to do well in their project.
+
+
+
